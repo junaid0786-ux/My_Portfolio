@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Lenis from 'lenis';
+import { AnimatePresence } from 'framer-motion';
 
 import Layout from './components/Layout';
 import HeroAbout from './components/HeroAbout';
@@ -8,9 +9,15 @@ import Projects from './components/Projects';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
+import Loader from './components/Loader';
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
+    // Only initialize Lenis after loading is complete
+    if (isLoading) return;
+
     // Initialize Lenis for smooth scrolling
     const lenis = new Lenis({
       duration: 1.2,
@@ -34,18 +41,28 @@ function App() {
     return () => {
       lenis.destroy();
     };
-  }, []);
+  }, [isLoading]);
 
   return (
     <>
-      <CustomCursor />
-      <Layout>
-        <HeroAbout />
-        <Skills />
-        <Projects />
-        <Contact />
-        <Footer />
-      </Layout>
+      <AnimatePresence mode="wait">
+        {isLoading && (
+          <Loader key="loader" onComplete={() => setIsLoading(false)} />
+        )}
+      </AnimatePresence>
+
+      {!isLoading && (
+        <>
+          <CustomCursor />
+          <Layout>
+            <HeroAbout />
+            <Skills />
+            <Projects />
+            <Contact />
+            <Footer />
+          </Layout>
+        </>
+      )}
     </>
   );
 }

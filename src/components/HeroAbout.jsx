@@ -76,7 +76,7 @@ export default function HeroAbout() {
       {/* 3D Background */}
       <div className="absolute inset-0 z-0 pointer-events-none opacity-50">
         <Canvas camera={{ position: [0, 0, 5] }}>
-          <ambientLight intensity={1.5} />
+          <ambientLight intensity={0.5} />
           <StarryBackground mousePosition={mousePosition} />
         </Canvas>
       </div>
