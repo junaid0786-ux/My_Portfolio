@@ -4,7 +4,7 @@ import { Send, Rocket } from 'lucide-react';
 
 export default function Contact() {
   const containerRef = useRef(null);
-  
+
   // 3D Hover Interaction state
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -63,7 +63,7 @@ export default function Contact() {
           >
             {/* Background Glow */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-neon-cyan/10 blur-[100px] rounded-full pointer-events-none"></div>
-            
+
             {/* 3D Floating Rocket Container */}
             <motion.div
               animate={{ y: [0, -20, 0] }}
@@ -73,13 +73,13 @@ export default function Contact() {
             >
               {/* Pulsing ring */}
               <div className="absolute inset-0 rounded-full border border-neon-cyan/30 scale-110 opacity-0 group-hover:opacity-100 group-hover:scale-125 transition-all duration-700 pointer-events-none"></div>
-              
-              <Rocket 
-                size={140} 
-                strokeWidth={1} 
-                className="text-white drop-shadow-[0_0_20px_rgba(0,243,255,0.4)] transition-transform duration-500 group-hover:-translate-y-4 group-hover:scale-110" 
+
+              <Rocket
+                size={140}
+                strokeWidth={1}
+                className="text-white drop-shadow-[0_0_20px_rgba(0,243,255,0.4)] transition-transform duration-500 group-hover:-translate-y-4 group-hover:scale-110"
               />
-              
+
               {/* Rocket Exhaust */}
               <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
                 <div className="w-6 h-12 bg-gradient-to-t from-transparent via-orange-400 to-yellow-200 blur-md rounded-full animate-pulse"></div>

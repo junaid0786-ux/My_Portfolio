@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Stars, Float, Icosahedron, MeshDistortMaterial } from '@react-three/drei';
+import { Stars } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import { Download, GitMerge } from 'lucide-react';
 import profileImg from '../assets/profile.png';
@@ -20,56 +20,35 @@ const LinkedinIcon = ({ className }) => (
 );
 
 function StarryBackground({ mousePosition }) {
-  const ref = useRef();
+  const groupRef = useRef();
+  const starsRef = useRef();
 
-  useFrame(() => {
-    if (ref.current) {
-      ref.current.rotation.x -= 0.0002;
-      ref.current.rotation.y -= 0.0002;
+  useFrame((state, delta) => {
+    if (starsRef.current) {
+      // Infinite continuous rotation (slowed down)
+      starsRef.current.rotation.x -= delta * 0.01;
+      starsRef.current.rotation.y -= delta * 0.01;
+    }
 
-      // Parallax effect
-      ref.current.position.x = (mousePosition.x * 1.5);
-      ref.current.position.y = (-mousePosition.y * 1.5);
+    if (groupRef.current) {
+      // Reduced-speed mouse parallax effect
+      groupRef.current.position.x = mousePosition.x * 2.5;
+      groupRef.current.position.y = -mousePosition.y * 2.5;
+      groupRef.current.rotation.x = -mousePosition.y * 0.1;
+      groupRef.current.rotation.y = mousePosition.x * 0.1;
     }
   });
 
   return (
-    <group ref={ref}>
-      <Stars radius={100} depth={50} count={5000} factor={4} saturation={1} fade speed={1.5} />
+    <group ref={groupRef}>
+      <group ref={starsRef}>
+        <Stars radius={100} depth={50} count={5000} factor={4} saturation={1} fade speed={0.5} />
+      </group>
     </group>
   );
 }
 
-function FloatingGeometry() {
-  return (
-    <>
-      <Float speed={2} rotationIntensity={1.5} floatIntensity={2}>
-        <Icosahedron args={[1.5, 0]} position={[0, 0, 0]}>
-          <MeshDistortMaterial
-            color="#00f3ff"
-            emissive="#00f3ff"
-            emissiveIntensity={0.6}
-            wireframe
-            distort={0.4}
-            speed={2}
-          />
-        </Icosahedron>
-      </Float>
-      <Float speed={1.5} rotationIntensity={2} floatIntensity={1.5}>
-        <Icosahedron args={[0.8, 0]} position={[-3, 2, -2]}>
-          <MeshDistortMaterial
-            color="#b026ff"
-            emissive="#b026ff"
-            emissiveIntensity={0.6}
-            wireframe
-            distort={0.5}
-            speed={3}
-          />
-        </Icosahedron>
-      </Float>
-    </>
-  );
-}
+
 
 export default function HeroAbout() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -95,13 +74,10 @@ export default function HeroAbout() {
       onMouseMove={handleMouseMove}
     >
       {/* 3D Background */}
-      <div className="absolute inset-0 z-0 pointer-events-none opacity-80">
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-50">
         <Canvas camera={{ position: [0, 0, 5] }}>
-          <ambientLight intensity={0.5} />
+          <ambientLight intensity={1.5} />
           <StarryBackground mousePosition={mousePosition} />
-          <group position={[4, 0, -5]}>
-            <FloatingGeometry />
-          </group>
         </Canvas>
       </div>
 
@@ -117,19 +93,19 @@ export default function HeroAbout() {
         >
           <div className="relative group w-full max-w-sm mx-auto lg:mx-0">
             {/* Dynamic Glowing Aura */}
-            <div className="absolute -inset-1 bg-gradient-to-r from-neon-cyan via-blue-500 to-neon-purple rounded-[2.5rem] blur-2xl opacity-40 group-hover:opacity-70 transition duration-700 animate-pulse"></div>
+            <div className="absolute -inset-1 bg-white/20 rounded-[2.5rem] blur-2xl opacity-40 group-hover:opacity-60 transition duration-700"></div>
 
             {/* Profile Container */}
-            <div className="relative rounded-[2rem] bg-space-900/80 backdrop-blur-2xl border border-white/10 p-2 overflow-hidden transform transition-all duration-500 group-hover:scale-[1.02] group-hover:border-neon-cyan/30">
-              <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent z-10 pointer-events-none rounded-[2rem]"></div>
+            <div className="relative rounded-[2rem] bg-space-900/80 backdrop-blur-2xl border border-white/10 p-2 overflow-hidden transform transition-all duration-500 group-hover:scale-[1.02] group-hover:border-white/30">
+              <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent z-10 pointer-events-none rounded-[2rem]"></div>
 
               {/* Image Mask */}
               <div className="relative rounded-[1.8rem] overflow-hidden aspect-[4/5] bg-black/50">
                 <div className="absolute inset-0 shadow-[inset_0_0_40px_rgba(0,0,0,0.8)] z-20 pointer-events-none"></div>
 
                 {/* Decorative Elements */}
-                <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-neon-cyan shadow-[0_0_10px_#00f3ff] z-20 animate-ping"></div>
-                <div className="absolute bottom-4 left-4 w-12 h-1 bg-gradient-to-r from-neon-cyan to-transparent z-20 opacity-50"></div>
+                <div className="absolute top-4 right-4 w-2 h-2 rounded-full bg-white shadow-[0_0_10px_#ffffff] z-20 animate-ping"></div>
+                <div className="absolute bottom-4 left-4 w-12 h-1 bg-gradient-to-r from-white to-transparent z-20 opacity-50"></div>
 
                 <img
                   src={profileImg}
@@ -180,7 +156,7 @@ export default function HeroAbout() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="text-5xl sm:text-6xl md:text-8xl font-black mb-4 tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-gray-500"
+              className="text-5xl sm:text-6xl md:text-8xl font-black mb-4 tracking-tighter text-white drop-shadow-md"
             >
               Junaid Khan
             </motion.h1>
@@ -189,16 +165,16 @@ export default function HeroAbout() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="text-xl md:text-3xl font-light mb-6 text-gray-300"
+              className="text-xl md:text-3xl font-normal mb-6 text-white drop-shadow-sm"
             >
-              Building <span className="font-semibold text-white">Digital Realities</span> from concepts to code.
+              Building <span className="font-bold text-white">Digital Realities</span> from concepts to code.
             </motion.h3>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="prose prose-invert max-w-2xl mx-auto lg:mx-0 mb-8 text-gray-400 text-base md:text-lg leading-relaxed font-light"
+              className="prose prose-invert max-w-2xl mx-auto lg:mx-0 mb-8 text-gray-100 text-base md:text-lg leading-relaxed font-medium drop-shadow-sm"
             >
               <p className="mb-4">
                 I am a passionate Full-Stack Engineer and UI/UX Designer who transforms complex problems into elegant, high-performance web applications. Every project is an opportunity to tell a story through seamless user experiences and cutting-edge interactive architecture. Let's create something extraordinary together.
