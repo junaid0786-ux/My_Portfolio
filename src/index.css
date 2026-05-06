@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@theme {
+  --color-space-900: #050505;
+  --color-neon-cyan: #00f3ff;
+  --color-neon-purple: #b026ff;
+  
+  --font-sans: 'Inter', system-ui, sans-serif;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-space-900);
+    color: #ffffff;
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+  }
+}
+
+@media (pointer: fine) {
+  * {
+    cursor: none !important;
+  }
+}
+
+/* Animations */
+@keyframes pulse-radar {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.1;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+}
+
+.animate-radar {
+  animation: pulse-radar 4s ease-in-out infinite;
+}

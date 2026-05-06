@@ -1,0 +1,74 @@
+# Space-Themed Personal Portfolio Plan
+
+This document outlines the architecture and implementation steps for building your space-themed personal portfolio. 
+
+## Goal
+To build a highly creative, single-page, space-themed personal portfolio for Junaid Khan. The portfolio will feature 3D elements, parallax effects, and smooth scrolling, utilizing a modern tech stack (React/Vite, Tailwind CSS, Three.js, Framer Motion, and Lenis).
+
+## User Review Required
+
+> [!IMPORTANT]  
+> Please review the following design decisions before I proceed:
+> 1. **Tailwind CSS v4:** Tailwind v4 is relatively new. I will set it up using the `@tailwindcss/vite` plugin which is the recommended way for Vite projects in v4.
+> 2. **Lenis Smooth Scroll:** The `@studio-freight/lenis` package has been officially renamed to simply `lenis`. I will install `lenis` to ensure you have the latest and most stable version, though the API remains identical.
+
+## Proposed Architecture
+
+### Global Setup
+- **Framework:** Vite with React
+- **Styling:** Tailwind CSS v4 (`@tailwindcss/vite`)
+- **Dependencies:** 
+  - `three`
+  - `@react-three/fiber`
+  - `@react-three/drei`
+  - `framer-motion`
+  - `lenis`
+  - `lucide-react` (for icons)
+
+### Component Structure
+
+#### `App.jsx`
+- Initializes the `lenis` smooth scroll globally.
+- Wraps all sections in the main Layout component.
+
+#### `Layout.jsx`
+- Contains the fixed glassmorphism navigation bar.
+- Renders the `children` (sections) below it.
+
+#### `Hero.jsx`
+- Uses `@react-three/fiber` and `@react-three/drei` to render a full-screen interactive `<Stars />` background.
+- Parallax effect on the stars based on mouse movement using `framer-motion`.
+- Modern typography center-aligned.
+- Glowing neon-bordered CTA button.
+
+#### `Summary.jsx` (About)
+- Scroll-triggered parallax using `framer-motion`.
+- Renders a floating 3D geometric shape via `@react-three/drei` `<Float>`.
+- Biographical text layout.
+
+#### `Skills.jsx`
+- "Solar System" UI representation.
+- Holographic cards bobbing up and down using `framer-motion` `y` axis animations.
+- Hover scaling (`scale: 1.1`) and glowing box-shadow effects.
+
+#### `Projects.jsx`
+- Horizontal scroll container using `framer-motion` sticky position and `useScroll`.
+- Futuristic project cards with glassmorphism (`backdrop-blur`) and border gradients.
+
+#### `Contact.jsx`
+- "Transmission Center" minimalist form.
+- CSS keyframe pulse animation behind the form to simulate a radar/black hole.
+- "Warp speed" hover effect on the submit button.
+
+## Verification Plan
+
+### Automated Steps
+- Scaffold Vite project.
+- Install all required dependencies.
+- Implement global styles in `index.css` (Tailwind v4 theme setup).
+- Implement all specified components.
+
+### Manual Verification
+- Run the development server locally (`npm run dev`).
+- Visually inspect the 3D elements, parallax effects, and smooth scroll behavior.
+- Ensure the app is responsive and works flawlessly on desktop.
