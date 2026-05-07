@@ -1,13 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useSpring } from 'framer-motion';
 
 export default function CustomCursor() {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
+
+  // Use Framer Motion values to bypass React render phase
+  const cursorX = useMotionValue(-100);
+  const cursorY = useMotionValue(-100);
+
+  const springConfig = { damping: 20, stiffness: 250, mass: 0.5 };
+  const cursorXSpring = useSpring(cursorX, springConfig);
+  const cursorYSpring = useSpring(cursorY, springConfig);
+
+  const dotSpringConfig = { damping: 28, stiffness: 500, mass: 0.1 };
+  const dotXSpring = useSpring(cursorX, dotSpringConfig);
+  const dotYSpring = useSpring(cursorY, dotSpringConfig);
 
   useEffect(() => {
     const handleMouseMove = (e) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
+      cursorX.set(e.clientX);
+      cursorY.set(e.clientY);
     };
 
     const handleMouseOver = (e) => {
@@ -32,39 +44,35 @@ export default function CustomCursor() {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseover', handleMouseOver);
     };
-  }, []);
+  }, [cursorX, cursorY]);
 
   return (
     <>
       {/* Outer Ring */}
       <motion.div
         className="fixed top-0 left-0 w-8 h-8 rounded-full border border-neon-cyan pointer-events-none z-[9999] mix-blend-difference"
+        style={{
+          x: cursorXSpring,
+          y: cursorYSpring,
+          translateX: "-50%",
+          translateY: "-50%",
+        }}
         animate={{
-          x: mousePos.x - 16,
-          y: mousePos.y - 16,
           scale: isHovering ? 1.5 : 1,
           opacity: isHovering ? 0.5 : 1,
-        }}
-        transition={{
-          type: 'spring',
-          stiffness: 250,
-          damping: 20,
-          mass: 0.5,
         }}
       />
       {/* Inner Dot */}
       <motion.div
         className="fixed top-0 left-0 w-2 h-2 rounded-full bg-neon-purple pointer-events-none z-[10000]"
-        animate={{
-          x: mousePos.x - 4,
-          y: mousePos.y - 4,
-          scale: isHovering ? 0 : 1,
+        style={{
+          x: dotXSpring,
+          y: dotYSpring,
+          translateX: "-50%",
+          translateY: "-50%",
         }}
-        transition={{
-          type: 'spring',
-          stiffness: 500,
-          damping: 28,
-          mass: 0.1,
+        animate={{
+          scale: isHovering ? 0 : 1,
         }}
       />
     </>

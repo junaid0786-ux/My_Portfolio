@@ -30,19 +30,19 @@ function StarryBackground({ mousePosition }) {
       starsRef.current.rotation.y -= delta * 0.01;
     }
 
-    if (groupRef.current) {
-      // Reduced-speed mouse parallax effect
-      groupRef.current.position.x = mousePosition.x * 2.5;
-      groupRef.current.position.y = -mousePosition.y * 2.5;
-      groupRef.current.rotation.x = -mousePosition.y * 0.1;
-      groupRef.current.rotation.y = mousePosition.x * 0.1;
+    if (groupRef.current && mousePosition.current) {
+      // Reduced-speed mouse parallax effect reading from ref
+      groupRef.current.position.x = mousePosition.current.x * 2.5;
+      groupRef.current.position.y = -mousePosition.current.y * 2.5;
+      groupRef.current.rotation.x = -mousePosition.current.y * 0.1;
+      groupRef.current.rotation.y = mousePosition.current.x * 0.1;
     }
   });
 
   return (
     <group ref={groupRef}>
       <group ref={starsRef}>
-        <Stars radius={100} depth={50} count={5000} factor={4} saturation={1} fade speed={0.5} />
+        <Stars radius={100} depth={50} count={2500} factor={4} saturation={1} fade speed={0.5} />
       </group>
     </group>
   );
@@ -51,13 +51,13 @@ function StarryBackground({ mousePosition }) {
 
 
 export default function HeroAbout() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const mousePosition = useRef({ x: 0, y: 0 });
 
   const handleMouseMove = (e) => {
-    setMousePosition({
+    mousePosition.current = {
       x: (e.clientX / window.innerWidth) * 2 - 1,
       y: (e.clientY / window.innerHeight) * 2 - 1,
-    });
+    };
   };
 
   const scrollToSkills = () => {
@@ -75,7 +75,7 @@ export default function HeroAbout() {
     >
       {/* 3D Background */}
       <div className="absolute inset-0 z-0 pointer-events-none opacity-50">
-        <Canvas camera={{ position: [0, 0, 5] }}>
+        <Canvas camera={{ position: [0, 0, 5] }} dpr={[1, 1.5]}>
           <ambientLight intensity={0.5} />
           <StarryBackground mousePosition={mousePosition} />
         </Canvas>
