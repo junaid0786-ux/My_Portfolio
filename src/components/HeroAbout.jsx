@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Stars } from '@react-three/drei';
 import { motion } from 'framer-motion';
@@ -52,6 +52,12 @@ function StarryBackground({ mousePosition }) {
 
 export default function HeroAbout() {
   const mousePosition = useRef({ x: 0, y: 0 });
+
+  const mockContributions = useMemo(() => {
+    return [...Array(14)].map(() => 
+      Math.random() > 0.5 ? (Math.random() > 0.5 ? 'bg-neon-cyan' : 'bg-neon-cyan/50') : 'bg-white/10'
+    );
+  }, []);
 
   const handleMouseMove = (e) => {
     mousePosition.current = {
@@ -195,10 +201,10 @@ export default function HeroAbout() {
                   </div>
                   {/* Mock Contribution Graph */}
                   <div className="flex gap-1">
-                    {[...Array(14)].map((_, i) => (
+                    {mockContributions.map((colorClass, i) => (
                       <div
                         key={i}
-                        className={`w-3 h-3 rounded-sm ${Math.random() > 0.5 ? (Math.random() > 0.5 ? 'bg-neon-cyan' : 'bg-neon-cyan/50') : 'bg-white/10'}`}
+                        className={`w-3 h-3 rounded-sm ${colorClass}`}
                       ></div>
                     ))}
                   </div>
